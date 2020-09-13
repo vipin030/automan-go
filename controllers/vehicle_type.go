@@ -20,7 +20,13 @@ type UpdateVehicleTypeInput struct {
 	UserId      uint64    `json:"user_id" binding:"required"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
-
+// ShowAccount godoc
+// @Summary Show all vehicle type
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} models.VehicleType
+// @Header 200 {string} Token "qwerty"
+// @Router /vtypes [get]
 func FindVehicleTypes(c *gin.Context) {
 	var vtypes []models.VehicleType
 	models.DB.Find(&vtypes)
@@ -28,6 +34,16 @@ func FindVehicleTypes(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": vtypes})
 }
 
+// ShowAccount godoc
+// @Summary Show a vehicle type
+// @Description get string by ID
+// @ID get-string-by-int
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Vehicle ID"
+// @Success 200 {object} models.VehicleType
+// @Header 200 {string} Token "qwerty"
+// @Router /vtypes/{id} [get]
 func FindVehicleType(c *gin.Context) {
 	// Get model if exist
 	var vtype models.VehicleType
@@ -39,6 +55,7 @@ func FindVehicleType(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": vtype})
 }
 
+// @Router /vtypes [post]
 func CreateVehicleType(c *gin.Context) {
 	// Validate input
 	var input VehicleType
@@ -56,6 +73,7 @@ func CreateVehicleType(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": vehicle_type})
 }
 
+// @Router /vtypes/{id} [patch]
 func UpdateVehicleType(c *gin.Context) {
 	// Get model if exist
 	var vehicle_type models.VehicleType
@@ -78,6 +96,7 @@ func UpdateVehicleType(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": vehicle_type})
 }
 
+// @Router /vtypes/{id} [detete]
 func DeleteVehicleType(c *gin.Context) {
 	// Get model if exist
 	var vehicle_type models.VehicleType
