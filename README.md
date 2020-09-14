@@ -7,6 +7,13 @@ How to run:
 $ gin -a 8080 -p 3001 run main.go
 
 ```
+
+Run project using Docker:
+```
+docker-compose up --build
+
+```
+
 Generate Swagger docs
 ```
 swag init
