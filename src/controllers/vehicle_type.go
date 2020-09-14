@@ -1,25 +1,26 @@
 package controllers
 
 import (
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/vipin030/automan/models"
+	"github.com/vipin030/automan/src/models"
 )
 
 type VehicleType struct {
-	Name        string    `json:"name" binding:"required"`
-	UserId      uint64    `json:"user_id" binding:"required"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	Name      string    `json:"name" binding:"required"`
+	UserId    uint64    `json:"user_id" binding:"required"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type UpdateVehicleTypeInput struct {
-	Name        string    `json:"name"`
-	UserId      uint64    `json:"user_id" binding:"required"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	Name      string    `json:"name"`
+	UserId    uint64    `json:"user_id" binding:"required"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
+
 // ShowAccount godoc
 // @Summary Show all vehicle type
 // @Accept  json
@@ -64,7 +65,11 @@ func CreateVehicleType(c *gin.Context) {
 		return
 	}
 
-	vehicle_type := models.VehicleType{Name: input.Name, UserId: input.UserId, CreatedAt: time.Now().UTC()}
+	vehicle_type := models.VehicleType{
+		Name:      input.Name,
+		UserId:    input.UserId,
+		CreatedAt: time.Now().UTC(),
+	}
 	if err := models.DB.Create(&vehicle_type); err.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error})
 		return

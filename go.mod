@@ -8,18 +8,26 @@ require (
 	github.com/codegangsta/envy v0.0.0-20141216192214-4b78388c8ce4 // indirect
 	github.com/codegangsta/gin v0.0.0-20171026143024-cafe2ce98974 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
+	github.com/dave/dst v0.26.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-openapi/spec v0.19.9 // indirect
 	github.com/go-openapi/swag v0.19.9 // indirect
 	github.com/jinzhu/gorm v1.9.16
+	github.com/joho/godotenv v1.3.0
 	github.com/mailru/easyjson v0.7.6 // indirect
+	github.com/mattn/go-colorable v0.1.7 // indirect
 	github.com/mattn/go-shellwords v1.0.10 // indirect
+	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
+	github.com/segmentio/golines v0.0.0-20200824192126-7f30d3046793 // indirect
+	github.com/sirupsen/logrus v1.6.0 // indirect
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.7
 	github.com/urfave/cli/v2 v2.2.0 // indirect
+	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
 	golang.org/x/net v0.0.0-20200904194848-62affa334b73 // indirect
+	golang.org/x/sys v0.0.0-20200909081042-eff7692f9009 // indirect
 	golang.org/x/tools v0.0.0-20200913032122-97363e29fc9b // indirect
 	gopkg.in/urfave/cli.v1 v1.20.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
