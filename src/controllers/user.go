@@ -1,12 +1,12 @@
 package controllers
 
 import (
+	"github.com/gin-gonic/gin"
 	jwt "github.com/dgrijalva/jwt-go"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/vipin030/automan/src/models"
 )
 

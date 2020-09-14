@@ -16,3 +16,8 @@
 
 # Swagger
 /docs/
+
+#Environment variables
+.env
+
+gin-bin

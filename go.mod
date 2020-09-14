@@ -14,6 +14,7 @@ require (
 	github.com/go-openapi/spec v0.19.9 // indirect
 	github.com/go-openapi/swag v0.19.9 // indirect
 	github.com/jinzhu/gorm v1.9.16
+	github.com/joho/godotenv v1.3.0
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/mattn/go-colorable v0.1.7 // indirect
 	github.com/mattn/go-shellwords v1.0.10 // indirect
