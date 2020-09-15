@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/dn365/gin-zerolog"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
+	zlog "github.com/rs/zerolog/log"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
@@ -34,7 +37,10 @@ import (
 // @query.collection.format multi
 
 func main() {
+	// isConsole true
+	zlog.Logger = zlog.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	r := gin.Default()
+	r.Use(ginzerolog.Logger("gin"))
 	err := godotenv.Load()
   if err != nil {
     log.Fatal("Error loading .env file", err)
