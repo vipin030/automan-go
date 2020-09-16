@@ -19,5 +19,13 @@
 
 #Environment variables
 .env
-
+#GIN
 gin-bin
+
+.DS_Store
+
+#compiled APP
+app
+
+#public key
+id_rsa*
