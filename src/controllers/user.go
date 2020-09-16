@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 	"time"
@@ -10,6 +10,7 @@ import (
 	"github.com/vipin030/automan/src/models"
 )
 
+// User struct
 type User struct {
 	ID       uint64 `json:"id"`
 	Username string `json:"username"`
@@ -17,6 +18,7 @@ type User struct {
 	Phone    string `json:"phone"`
 }
 
+// UserList struct
 type UserList struct {
 	ID       uint64 `json:"id"`
 	Username string `json:"username"`
@@ -24,6 +26,7 @@ type UserList struct {
 	Phone    string `json:"phone"`
 }
 
+// Authenticate using user credentials
 func Authenticate(c *gin.Context) {
 	var u User
 	if err := c.ShouldBindJSON(&u); err != nil {
@@ -46,13 +49,14 @@ func Authenticate(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"token": token, "user": user})
 }
 
-func CreateToken(userId uint64) (string, error) {
+// CreateToken create new token
+func CreateToken(UserID uint64) (string, error) {
 	var err error
 	os.Setenv("ACCESS_SECRET", "lkngdogop")
 
 	atClaims := jwt.MapClaims{}
 	atClaims["autherized"] = true
-	atClaims["user_id"] = userId
+	atClaims["user_id"] = UserID
 	atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
 	token, err := at.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
