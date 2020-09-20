@@ -4,24 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
+	"fmt"
 
 	"github.com/vipin030/automan/src/models"
 )
-
-// VehicleType struct
-type VehicleType struct {
-	Name      string    `json:"name" binding:"required"`
-	UserID    uint64    `json:"user_id" binding:"required"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
-
-// UpdateVehicleTypeInput struct
-type UpdateVehicleTypeInput struct {
-	Name      string    `json:"name"`
-	UserID    uint64    `json:"user_id" binding:"required"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
 
 // FindVehicleTypes returns all vehicle type
 // ShowAccount godoc
@@ -32,9 +18,11 @@ type UpdateVehicleTypeInput struct {
 // @Header 200 {string} Token "qwerty"
 // @Router /vtypes [get]
 func FindVehicleTypes(c *gin.Context) {
-	var vtypes []models.VehicleType
-	models.DB.Find(&vtypes)
-
+	vtypes, err := models.FindAll()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"data": vtypes})
 }
 
@@ -50,13 +38,11 @@ func FindVehicleTypes(c *gin.Context) {
 // @Header 200 {string} Token "qwerty"
 // @Router /vtypes/{id} [get]
 func FindVehicleType(c *gin.Context) {
-	// Get model if exist
-	var vtype models.VehicleType
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&vtype).Error; err != nil {
+	vtype, err := models.Find(c.Param("id"))
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"data": vtype})
 }
 
@@ -64,8 +50,8 @@ func FindVehicleType(c *gin.Context) {
 // @Router /vtypes [post]
 func CreateVehicleType(c *gin.Context) {
 	// Validate input
-	var input VehicleType
-	if err := c.ShouldBindJSON(&input); err != nil {
+	input := &models.VehicleType{}
+	if err := c.ShouldBindJSON(input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -75,49 +61,47 @@ func CreateVehicleType(c *gin.Context) {
 		UserID:    input.UserID,
 		CreatedAt: time.Now().UTC(),
 	}
-	if err := models.DB.Create(&vehicleType); err.Error != nil {
+	data, err := vehicleType.Create()
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": vehicleType})
+	c.JSON(http.StatusOK, gin.H{"data": data})
 }
+
+
+// Set a recurring reminder to repeat every quarter for postgres minor upgrade
+// Create a discovery ticket to investigate how other teams are dealing with migration and what are the benifits we can achieve if we upgrade to latest major version
 
 // UpdateVehicleType Updates specific vehicle type
 // @Router /vtypes/{id} [patch]
 func UpdateVehicleType(c *gin.Context) {
-	// Get model if exist
-	var vehicleType models.VehicleType
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&vehicleType).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
-		return
-	}
-
 	// Validate input
-	var input UpdateVehicleTypeInput
-	if err := c.ShouldBindJSON(&input); err != nil {
+	input := &models.VehicleType{}
+	if err := c.ShouldBindJSON(input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	input.UpdatedAt = time.Now().UTC()
-
-	models.DB.Model(&vehicleType).Updates(input)
-
-	c.JSON(http.StatusOK, gin.H{"data": vehicleType})
+	_, err := input.Update(c.Param("id"))
+	fmt.Println("upfdate is", input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": input})
 }
 
 // DeleteVehicleType delete specific vehicle type
 // @Router /vtypes/{id} [detete]
 func DeleteVehicleType(c *gin.Context) {
 	// Get model if exist
-	var vehicleType models.VehicleType
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&vehicleType).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+	vehicleType := &models.VehicleType{}
+	_, err := vehicleType.Delete(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	models.DB.Delete(&vehicleType)
-
 	c.JSON(http.StatusOK, gin.H{"data": true})
 }
