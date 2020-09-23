@@ -7,6 +7,17 @@ import (
 	"github.com/vipin030/automan/src/models"
 )
 
+// CreateUserAccount creates new user
+func CreateUserAccount(c *gin.Context) {
+	user := &models.User{}
+	if err := c.ShouldBindJSON(user); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, "Invalid JSON Provided")
+		return
+	}
+	resp := user.Create()
+	c.JSON(http.StatusOK, gin.H{"data": resp})
+}
+
 // Authenticate using user credentials
 func Authenticate(c *gin.Context) {
 	user := &models.User{}
@@ -14,10 +25,10 @@ func Authenticate(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, "Invalid JSON provided")
 		return
 	}
-	resp, token, err := models.Login(user.Username, user.Password)
-	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+	resp := models.Login(user.Email, user.Password)
+	if status := resp["status"].(bool); !status {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": resp["message"]})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"token": token, "user": resp})
+	c.JSON(http.StatusOK, gin.H{"token": resp["token"], "user": resp["user"]})
 }

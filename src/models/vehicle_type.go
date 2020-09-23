@@ -2,7 +2,7 @@ package models
 
 import (
 	"time"
-	u "github.com/vipin030/automan/src/utils"
+	util "github.com/vipin030/automan/src/utils"
 )
 // VehicleType Model
 type VehicleType struct {
@@ -17,10 +17,10 @@ type VehicleType struct {
 func (vehicleType *VehicleType) Validate() (map[string]interface{}, bool) {
 
 	if vehicleType.Name == "" {
-		return u.Message(false, "Vehicle type should not be empty"), false
+		return util.Message(false, "Vehicle type should not be empty"), false
 	}
 	//All the required parameters are present
-	return u.Message(true, "success"), true
+	return util.Message(true, "success"), true
 }
 
 // Create return new vehicle type
