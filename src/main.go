@@ -55,12 +55,14 @@ func main() {
 
 	// Routes
 	r.POST("/login", controllers.Authenticate)
+	r.POST("/signup", controllers.CreateUserAccount)
 
+	r.Use(middleware.TokenAuthMiddleware())
 	v1 := r.Group("/api/v1")
 	{
 		vtypes := v1.Group("/vtypes")
 		{
-			vtypes.GET("", middleware.TokenAuthMiddleware(), controllers.FindVehicleTypes)
+			vtypes.GET("", controllers.FindVehicleTypes)
 			vtypes.GET(":id", controllers.FindVehicleType)
 			vtypes.POST("", controllers.CreateVehicleType)
 			vtypes.PATCH(":id", controllers.UpdateVehicleType)
