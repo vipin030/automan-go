@@ -15,6 +15,10 @@ func CreateUserAccount(c *gin.Context) {
 		return
 	}
 	resp := user.Create()
+	if status := resp["status"].(bool); !status {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": resp["message"]})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"data": resp})
 }
 

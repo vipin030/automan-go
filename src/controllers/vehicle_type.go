@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"time"
-	"fmt"
 
 	"github.com/vipin030/automan/src/models"
 )
@@ -61,15 +61,15 @@ func CreateVehicleType(c *gin.Context) {
 		UserID:    input.UserID,
 		CreatedAt: time.Now().UTC(),
 	}
-	data, err := vehicleType.Create()
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error})
+	data := vehicleType.Create()
+	log.Println("Error: ", data)
+	if status := data["status"].(bool); !status {
+		c.JSON(http.StatusBadRequest, gin.H{"error": data["message"]})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": data})
 }
-
 
 // Set a recurring reminder to repeat every quarter for postgres minor upgrade
 // Create a discovery ticket to investigate how other teams are dealing with migration and what are the benifits we can achieve if we upgrade to latest major version
@@ -85,7 +85,6 @@ func UpdateVehicleType(c *gin.Context) {
 	}
 	input.UpdatedAt = time.Now().UTC()
 	_, err := input.Update(c.Param("id"))
-	fmt.Println("upfdate is", input)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
