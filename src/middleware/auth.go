@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-
 )
 
 // ExtractToken extract token from request header

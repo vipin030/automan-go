@@ -1,14 +1,16 @@
 package models
 
 import (
-	"time"
 	util "github.com/vipin030/automan/src/utils"
+	"log"
+	"time"
 )
+
 // VehicleType Model
 type VehicleType struct {
 	ID        uint      `json:"id" gorm:"primary_key"`
 	Name      string    `json:"name"`
-	UserID    uint64    `gorm:"TYPE:integer REFERENCES users"`
+	UserID    uint64    `json:"user_id" gorm:"TYPE:integer REFERENCES users"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -24,16 +26,19 @@ func (vehicleType *VehicleType) Validate() (map[string]interface{}, bool) {
 }
 
 // Create return new vehicle type
-func (vehicleType *VehicleType) Create() (map[string]interface{}, error) {
+func (vehicleType *VehicleType) Create() map[string]interface{} {
 
-	resp, ok := vehicleType.Validate();
+	resp, ok := vehicleType.Validate()
 	if !ok {
-		return resp, nil
+		return resp
 	}
 	if err := DB.Create(vehicleType).Error; err != nil {
-		return nil, err
+		log.Println("Error: ", err)
+		return util.Message(false, "Vehicle Type creation failed")
 	}
-	return resp, nil
+	resp = util.Message(true, "Success")
+	resp["data"] = vehicleType
+	return resp
 }
 
 // Update return upated vehicle type
