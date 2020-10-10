@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+  db:
+    image: 'postgres:latest'
+    container_name: godockerpsql
+    ports:
+      - 5433:5432
+    restart: on-failure
+    expose:
+      - 5433
+    environment:
+      POSTGRES_DB: employee
+      POSTGRES_USER: interface
+      POSTGRES_PASSWORD: interface
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+    depends_on:
+      - db
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432

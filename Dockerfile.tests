@@ -16,20 +16,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o ./app ./src/main.go
-
-FROM alpine:latest
-
-RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
-
-RUN mkdir -p /api
-WORKDIR /api
-COPY --from=builder /api/app .
-COPY --from=builder /api/src/.env .
-
 RUN go get github.com/swaggo/swag/cmd/swag
 RUN swag init -g src/main.go
 
-EXPOSE $PORT
-
-ENTRYPOINT ["./app"]
+CMD ["go", "test", "-v", "-cover", "./..."]
