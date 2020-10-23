@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // DB object
@@ -18,6 +19,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	dir = strings.Replace(dir, "/models", "", 1)
 	if err := godotenv.Load(dir); err != nil {
 		log.Fatal("Error loading .env file", err)
 	}

@@ -1,0 +1,12 @@
+sudo: required
+services:
+  - docker
+
+before_script:
+  - docker-compose -f docker-compose.test.yaml up -d --build
+
+script:
+  - docker-compose exec web go test -v -cover ./...
+
+after_script:
+  - docker-compose down
