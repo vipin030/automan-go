@@ -2,11 +2,12 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
-	"time"
+	//"time"
 
 	"github.com/vipin030/automan/src/models"
+	"github.com/vipin030/automan/src/utils/logger"
+	util "github.com/vipin030/automan/src/utils"
 )
 
 // FindVehicleTypes returns all vehicle type
@@ -20,6 +21,7 @@ import (
 func FindVehicleTypes(c *gin.Context) {
 	vtypes, err := models.FindAll()
 	if err != nil {
+		logger.Error("Database error on find vehicle type", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
@@ -40,6 +42,7 @@ func FindVehicleTypes(c *gin.Context) {
 func FindVehicleType(c *gin.Context) {
 	vtype, err := models.Find(c.Param("id"))
 	if err != nil {
+		logger.Error("Error on FindVehicleType func ", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
@@ -52,6 +55,7 @@ func CreateVehicleType(c *gin.Context) {
 	// Validate input
 	input := &models.VehicleType{}
 	if err := c.ShouldBindJSON(input); err != nil {
+		logger.Error("Error on CreateVehicleType ", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -59,10 +63,10 @@ func CreateVehicleType(c *gin.Context) {
 	vehicleType := models.VehicleType{
 		Name:      input.Name,
 		UserID:    input.UserID,
-		CreatedAt: time.Now().UTC(),
+		CreatedAt: util.GetNow(),
 	}
 	data := vehicleType.Create()
-	log.Println("Error: ", data)
+
 	if status := data["status"].(bool); !status {
 		c.JSON(http.StatusBadRequest, gin.H{"error": data["message"]})
 		return
@@ -83,9 +87,10 @@ func UpdateVehicleType(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	input.UpdatedAt = time.Now().UTC()
+	input.UpdatedAt = util.GetNow()
 	_, err := input.Update(c.Param("id"))
 	if err != nil {
+		logger.Error("Error on UpdateVehicleType ", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -99,6 +104,7 @@ func DeleteVehicleType(c *gin.Context) {
 	vehicleType := &models.VehicleType{}
 	_, err := vehicleType.Delete(c.Param("id"))
 	if err != nil {
+		logger.Error("Error on DeleteVehicleType ", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

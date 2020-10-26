@@ -3,10 +3,10 @@ package models
 import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
+	util "github.com/vipin030/automan/src/utils"
 	"log"
 	"regexp"
 	"testing"
-	"time"
 )
 
 // Testcreate test the creation of vehicle type
@@ -18,8 +18,8 @@ func TestCreate(t *testing.T) {
 	vtype := &VehicleType{
 		Name:      "SUV",
 		UserID:    1,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		CreatedAt: util.GetNow(),
+		UpdatedAt: util.GetNow(),
 	}
 
 	mock.ExpectBegin() // start transaction
@@ -39,7 +39,7 @@ func TestFindAll(t *testing.T) {
 	assert := assert.New(t)
 	const sql = `SELECT * FROM "vehicle_types"`
 	vtypeMockRows := sqlmock.NewRows([]string{"id", "name", "user_id", "created_at", "updated_at"}).
-		AddRow("1", "SUV 1", 1, time.Now(), time.Now())
+		AddRow("1", "SUV 1", 1, util.GetNow(), util.GetNow())
 	mock.ExpectQuery(regexp.QuoteMeta(sql)).
 		WillReturnRows(vtypeMockRows)
 	vtypes, err := FindAll()
