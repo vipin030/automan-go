@@ -23,7 +23,13 @@ func init() {
 	if err := godotenv.Load(dir); err != nil {
 		log.Fatal("Error loading .env file", err)
 	}
-	dsn := fmt.Sprintf("user=%s password=%s host=%s dbname=%s sslmode=disable", os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_DB"))
+	var (
+		username = os.Getenv("POSTGRES_USER")
+		password = os.Getenv("POSTGRES_PASSWORD")
+		host     = os.Getenv("POSTGRES_HOST")
+		schema   = os.Getenv("POSTGRES_DB")
+	)
+	dsn := fmt.Sprintf("user=%s password=%s host=%s dbname=%s sslmode=disable", username, password, host, schema)
 	db, err := gorm.Open("postgres", dsn)
 	if err != nil {
 		fmt.Println(err)
