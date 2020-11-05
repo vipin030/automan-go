@@ -29,7 +29,10 @@ func TestCreate(t *testing.T) {
 
 	mock.ExpectCommit() // commit transaction
 
-	resp := vtype.Create()
+	resp, err := vtype.Create()
+	if err != nil {
+		t.Fail()
+	}
 	log.Println(resp)
 	assert.Equal(resp["status"].(bool), true)
 }

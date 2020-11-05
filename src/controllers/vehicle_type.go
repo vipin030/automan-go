@@ -3,11 +3,10 @@ package controllers
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	//"time"
 
 	"github.com/vipin030/automan/src/models"
-	"github.com/vipin030/automan/src/utils/logger"
 	util "github.com/vipin030/automan/src/utils"
+	"github.com/vipin030/automan/src/utils/logger"
 )
 
 // FindVehicleTypes returns all vehicle type
@@ -43,7 +42,7 @@ func FindVehicleType(c *gin.Context) {
 	vtype, err := models.Find(c.Param("id"))
 	if err != nil {
 		logger.Error("Error on FindVehicleType func ", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		c.JSON(err.Status(), gin.H{"error": err.Message()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": vtype})
@@ -65,10 +64,10 @@ func CreateVehicleType(c *gin.Context) {
 		UserID:    input.UserID,
 		CreatedAt: util.GetNow(),
 	}
-	data := vehicleType.Create()
+	data, error := vehicleType.Create()
 
-	if status := data["status"].(bool); !status {
-		c.JSON(http.StatusBadRequest, gin.H{"error": data["message"]})
+	if error != nil {
+		c.JSON(error.Status(), gin.H{"error": error.Message()})
 		return
 	}
 
@@ -88,10 +87,10 @@ func UpdateVehicleType(c *gin.Context) {
 		return
 	}
 	input.UpdatedAt = util.GetNow()
-	_, err := input.Update(c.Param("id"))
+	err := input.Update(c.Param("id"))
 	if err != nil {
 		logger.Error("Error on UpdateVehicleType ", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(err.Status(), gin.H{"error": err.Message()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": input})
@@ -102,10 +101,10 @@ func UpdateVehicleType(c *gin.Context) {
 func DeleteVehicleType(c *gin.Context) {
 	// Get model if exist
 	vehicleType := &models.VehicleType{}
-	_, err := vehicleType.Delete(c.Param("id"))
+	err := vehicleType.Delete(c.Param("id"))
 	if err != nil {
 		logger.Error("Error on DeleteVehicleType ", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(err.Status(), gin.H{"error": err.Message()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": true})

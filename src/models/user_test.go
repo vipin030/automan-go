@@ -53,7 +53,10 @@ func TestUserCreate(t *testing.T) {
 		return "password", nil
 	}
 
-	resp := user.Create()
+	resp, err := user.Create()
+	if err != nil {
+		t.Fail()
+	}
 	assert := assert.New(t)
 	if status := resp["status"].(bool); !status {
 		t.Fail()

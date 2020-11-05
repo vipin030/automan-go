@@ -14,9 +14,10 @@ func CreateUserAccount(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, "Invalid JSON Provided")
 		return
 	}
-	resp := user.Create()
-	if status := resp["status"].(bool); !status {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": resp["message"]})
+	resp, err := user.Create()
+
+	if err != nil {
+		c.JSON(err.Status(), gin.H{"error": err.Message()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": resp})
@@ -29,9 +30,9 @@ func Authenticate(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, "Invalid JSON provided")
 		return
 	}
-	resp := models.Login(user.Email, user.Password)
-	if status := resp["status"].(bool); !status {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": resp["message"]})
+	resp, error := models.Login(user.Email, user.Password)
+	if error != nil {
+		c.JSON(error.Status(), gin.H{"error": error.Message()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"token": resp["token"], "user": resp["user"]})
