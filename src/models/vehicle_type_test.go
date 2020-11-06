@@ -4,7 +4,6 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
 	util "github.com/vipin030/automan/src/utils"
-	"log"
 	"regexp"
 	"testing"
 )
@@ -30,7 +29,6 @@ func TestCreate(t *testing.T) {
 	mock.ExpectCommit() // commit transaction
 
 	resp := vtype.Create()
-	log.Println(resp)
 	assert.Equal(resp["status"].(bool), true)
 }
 
